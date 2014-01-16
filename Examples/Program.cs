@@ -44,7 +44,7 @@ namespace CsvParallelLibrary
 		[Csv(DisplayName = "World", DisplayOrder = 2)]
 		public string B { get; set; }
 
-		[Csv(DisplayName = "Cool", DisplayOrder = 3, CollectionSize = 13)]
+		[Csv(DisplayName = "Cool", DisplayOrder = 3, CollectionSize = 13, FlattenCollection = true)]
 		public IList<string> C { get; set; }
 
 		[Csv(DisplayName = "ASA", DisplayOrder = 4)]
@@ -52,11 +52,14 @@ namespace CsvParallelLibrary
 
 		[Csv]
 		public SubReport SubReport { get; set; }
+
+		[Csv(DisplayName = "Cool", DisplayOrder = 13, CollectionSize = 13, FlattenCollection = true)]
+		public IDictionary<string, string> D { get; set; }
 	}
 
 	public class SubReport : ICsvBase
 	{
-		[Csv(DisplayName = "Cool2", DisplayOrder = 5, CollectionSize = 13)]
+		[Csv(DisplayName = "Cool2", DisplayOrder = 5, CollectionSize = 13, FlattenCollection = false)]
 		public IList<string> C { get; set; }
 
 		[Csv(DisplayName = "Cool2", DisplayOrder = 6)]

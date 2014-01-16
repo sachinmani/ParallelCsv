@@ -71,7 +71,7 @@ namespace CsvLibraryUtils
 				{
 					var csvAttr = _mappings.GetPropertyCsvMetadata(property);
 					var instanceValue = _mappings.Invoke(property.GetGetMethod().MethodHandle, instance, null);
-					propertyValues.Add(csvAttr.DisplayOrder, instanceValue.ToString());
+					propertyValues.Add(csvAttr.DisplayOrder, instanceValue != null ? instanceValue.ToString() : string.Empty);
 				}
 				else if (typeof(ICsvBase).IsAssignableFrom(propertyType))
 				{
@@ -109,22 +109,25 @@ namespace CsvLibraryUtils
 			if (collectionParamType.Count() > 1)
 			{
 				var propertyValues = _mappings.Invoke(property.GetGetMethod().MethodHandle, instance, null);
-				if (propertyValues is IDictionary)
-				{
-					var collectionValues = propertyValues.GetType().GetProperty("Values");
+				if (propertyValues == null || propertyValues is IDictionary)
+				{						
 					var csvAttr = _mappings.GetPropertyCsvMetadata(property);
-					values.Add(csvAttr.DisplayOrder, _settings.FlattenArray
-											? string.Join(_settings.ValueSeparator, collectionValues)
-											: string.Format("[{0}]", string.Join(_settings.ValueSeparator, collectionValues)));
+					var collectionValues = propertyValues != null ? ((IDictionary)propertyValues).Values : new string[csvAttr.CollectionSize];
+					var flattenArray = csvAttr.FlattenCollection;
+					values.Add(csvAttr.DisplayOrder, (flattenArray || _settings.FlattenArray)
+											? string.Join(_settings.ValueSeparator, (IList<string>)collectionValues)
+											: string.Format("[{0}]", string.Join(_settings.ValueSeparator, (IList<string>)collectionValues)));
 				}
 			}
 			else
 			{
 				var propertyValues = _mappings.Invoke(property.GetGetMethod().MethodHandle, instance, null);
-				if (propertyValues is IList)
+				if (propertyValues == null || propertyValues is IList)
 				{
 					var csvAttr = _mappings.GetPropertyCsvMetadata(property);
-					values.Add(csvAttr.DisplayOrder, _settings.FlattenArray
+					propertyValues = propertyValues ?? new string[csvAttr.CollectionSize];
+					var flattenArray = csvAttr.FlattenCollection;
+					values.Add(csvAttr.DisplayOrder, (flattenArray || _settings.FlattenArray)
 											? string.Join(_settings.ValueSeparator, (IList<string>)propertyValues)
 											: string.Format("[{0}]", string.Join(_settings.ValueSeparator, (IList<string>)propertyValues)));
 				}

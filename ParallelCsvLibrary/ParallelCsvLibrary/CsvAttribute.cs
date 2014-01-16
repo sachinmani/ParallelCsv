@@ -2,6 +2,7 @@
 
 namespace CsvLibraryUtils
 {
+	[AttributeUsage(AttributeTargets.Property)]
 	public class CsvAttribute : Attribute
 	{
 		public int DisplayOrder { get; set; }
@@ -13,5 +14,7 @@ namespace CsvLibraryUtils
 		public string ResourceKey { get; set; }
 
 		public int CollectionSize { get; set; }
+
+		public bool FlattenCollection { get; set; } 
 	}
 }
