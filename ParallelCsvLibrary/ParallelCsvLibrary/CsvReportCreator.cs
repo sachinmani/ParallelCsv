@@ -11,12 +11,10 @@ namespace CsvLibraryUtils
 	public class CsvReportCreator
 	{
 		private readonly CsvSettings _csvSettings;
-		private readonly bool _runParallel;
 
-		public CsvReportCreator(CsvSettings settings, bool runParallel)
+		public CsvReportCreator(CsvSettings settings)
 		{
 			_csvSettings = settings;
-			_runParallel = runParallel;
 		}
 
 		/// <summary>
@@ -38,7 +36,7 @@ namespace CsvLibraryUtils
 			{
 				var headers = new SortedDictionary<int, string>();
 				var locker = new object();
-				if (_runParallel)
+				if (true)
 				{
 					Parallel.ForEach(items, new ParallelOptions { /*MaxDegreeOfParallelism = concurrencyLevel*/ }, () => new StringBuilder(), (item, loopState, csvBuilder) =>
 						{
@@ -68,16 +66,6 @@ namespace CsvLibraryUtils
 								stringBuilder.Clear();
 							}
 						});
-				}
-				else
-				{
-					foreach (var item in items)
-					{
-						var values = new SortedDictionary<int, string>();
-						csvPve.GetPropertysValue(item, values);
-						stringBuilder.Append(string.Join(_csvSettings.ValueSeparator, values.Values));
-						stringBuilder.Append(Environment.NewLine);
-					}
 				}
 			}
 			finally

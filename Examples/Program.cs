@@ -27,7 +27,7 @@ namespace CsvParallelLibrary
 			}
 
 			timer.Start();
-			var reportCreator = new CsvReportCreator(new CsvSettings { FlattenArray = true }, true);
+			var reportCreator = new CsvReportCreator(new CsvSettings { FlattenArray = true });
 			reportCreator.GetCsvString(reports, str => File.AppendAllText(@"C:\Sample.txt", str, Encoding.ASCII));
 			reports = null;
 			timer.Stop();
